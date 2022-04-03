@@ -5,6 +5,7 @@ tinder_api = 'https://api.gotinder.com'
 
 fetchMatchesEndpoint = tinder_api + \
                        '/v2/matches?locale=en&count=60&message=0&is_tinder_u=false'
+
 messageMatchEndpoint = tinder_api + '/user/matches/'
 
 fetchParams = {'count': 100, 'is_tinder_u': 'false', 'message': 1}
