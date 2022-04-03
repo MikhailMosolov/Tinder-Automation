@@ -1,48 +1,51 @@
 import requests
 
-fetchMatchesEndpoint = "https://api.gotinder.com/v2/matches?locale=en&count=60&message=0&is_tinder_u=false"
-messageMatchEndpoint = "https://api.gotinder.com/user/matches/"
+
+tinder_api = 'https://api.gotinder.com'
+
+fetchMatchesEndpoint = tinder_api + \
+                       '/v2/matches?locale=en&count=60&message=0&is_tinder_u=false'
+messageMatchEndpoint = tinder_api + '/user/matches/'
 
 fetchParams = {'count': 100, 'is_tinder_u': 'false', 'message': 1}
-headers = { 'Accept':'application/json',
-            'Content-Type': 'application/json',
-            'Origin': 'https://tinder.com',
-            'app-version':'1020321',
-            'platform':'web',
-            'Referer':'https://tinder.com/',
-            'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.2 Safari/605.1.15',
-            'X-Auth-Token':'....................................', #***Your tinder auth-token***
-            'x-supported-image-formats':'webp,jpeg'
-        }
 
-matchesApiResponse = requests.get(url = fetchMatchesEndpoint, params = fetchParams, headers = headers)
-data = matchesApiResponse.json()
-data=data['data']['matches'][:]
+headers = {
+    #***Your tinder auth-token***
+    'X-Auth-Token':'',
+    }
+
+matchesApiResponse = requests.get(
+    url = fetchMatchesEndpoint, params = fetchParams, headers = headers)
 
 
-names = []
-ids = []
+def getPerson():
+    data = requests.get(fetchMatchesEndpoint, headers=headers).json()
+    data1 = data['data']['matches']
+    if data1 == []:
+        return 0
+    else:
+        person = data1[0]
+        ID = person['_id']
+        name = person['person']['name']
+        return[ID, name]
 
-for i in data:
-    id = i['id']
-    name = i['person']['name']
-    
-    ids.append(id)
-    names.append(name)
 
-j=0
-for i in range(0, len(ids)):
+while True:   
+    person = getPerson()
+    if person == 0:
+        print('Completed')
+        break
 
-    print('Sending message to ' + names[j] + ' ................')
-    body={}
-    body['matchId'] = ids[i]
-    body['message'] = ';)'
-    body['tempMessageId'] = '0.07054938870864036' # Any random number
-    body['userId'] = '........................' # Your tinder user-id
+    else:
+        print(person)
+        print('Sending message to ' + person[1] + ' ................')
 
-    url = messageMatchEndpoint + ids[i] + '?locale=en-GB'
-    messageApiResponse = requests.post(url = url, json = body, headers = headers)
-    print('Message successfully sent ................')
-    j+=1;
+        body={}
+        body['matchId'] = person[0]
+        body['message'] = ';)'
+        body['tempMessageId'] = '0.07054938870864036' # Any random number
+        body['userId'] = '' # Your tinder user-id
 
-print('Completed')
+        url = messageMatchEndpoint + person[0] + '?locale=en-GB'
+        messageApiResponse = requests.post(url = url, json = body, headers = headers)
+        print('Message successfully sent ................')
