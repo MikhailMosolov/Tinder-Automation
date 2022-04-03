@@ -33,7 +33,7 @@ def getPerson():
 while True:   
     person = getPerson()
     if person == 0:
-        print('Completed')
+        print('No new matches...')
         break
 
     else:
