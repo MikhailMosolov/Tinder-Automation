@@ -4,4 +4,4 @@ This version helps to send template messages to matches not yet being in corresp
 Your tinder auth-token can easily be picked through inspecting profile XHR headers, 
 whilst your id could be found in preview section.
 
-So far <liker> script works only to match everyone.
+So far liker.py works only to match everyone.
